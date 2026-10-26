@@ -1,0 +1,856 @@
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<title>Painel de Abertura</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700&family=Lora:wght@500;600&display=swap">
+<style>
+:root {
+  /* Layout: cabecalho da marca, barra fixa de progresso, resumo com foco do dia, graficos e quadro com uma coluna por area */
+  --bg: #FAF8F4;
+  --surface: #FFFFFF;
+  --sand: #EFE9DF;
+  --ink: #2B2F33;
+  --muted: #5C686E;
+  --line: #E0D8CA;
+  --line-strong: #A9A08F;
+  --accent: #12394A;
+  --accent-ink: #FAF8F4;
+  --head-bg: #12394A;
+  --head-ink: #FAF8F4;
+  --head-muted: #B9CDD4;
+  --brass: #A68A5B;
+  --brass-soft: #D2BE94;
+  --progress: #8FA89B;
+  --track: rgba(250, 248, 244, 0.22);
+  --track-light: #E4DDCF;
+  --progress-light: #3F7A63;
+  --good: #2F6B55;
+  --good-bg: #E2EFE8;
+  --warn: #7A5300;
+  --warn-bg: #F6E7C8;
+  --bad: #9A3324;
+  --bad-bg: #F4DDD7;
+  --wait: #5C686E;
+  --wait-bg: #ECE7DC;
+  --focus: #1F5668;
+  --font-display: "Lora", Georgia, "Times New Roman", serif;
+  --font-body: "DM Sans", system-ui, -apple-system, "Segoe UI", sans-serif;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #0E1B21;
+    --surface: #14262E;
+    --sand: #1A2F38;
+    --ink: #E9E6DF;
+    --muted: #9DB0B7;
+    --line: #25404B;
+    --line-strong: #5F7882;
+    --accent: #7FB0C2;
+    --accent-ink: #0E1B21;
+    --head-bg: #0A1519;
+    --head-ink: #F2EFE8;
+    --head-muted: #94AAB2;
+    --brass: #C2A672;
+    --brass-soft: #C2A672;
+    --track-light: #25404B;
+    --progress-light: #8FA89B;
+    --good: #8FC3A8;
+    --good-bg: #17332A;
+    --warn: #E0B45A;
+    --warn-bg: #3A2F14;
+    --bad: #E8907E;
+    --bad-bg: #40211B;
+    --wait: #9DB0B7;
+    --wait-bg: #1C313A;
+    --focus: #9CC6D6;
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #0E1B21;
+  --surface: #14262E;
+  --sand: #1A2F38;
+  --ink: #E9E6DF;
+  --muted: #9DB0B7;
+  --line: #25404B;
+  --line-strong: #5F7882;
+  --accent: #7FB0C2;
+  --accent-ink: #0E1B21;
+  --head-bg: #0A1519;
+  --head-ink: #F2EFE8;
+  --head-muted: #94AAB2;
+  --brass: #C2A672;
+  --brass-soft: #C2A672;
+  --track-light: #25404B;
+  --progress-light: #8FA89B;
+  --good: #8FC3A8;
+  --good-bg: #17332A;
+  --warn: #E0B45A;
+  --warn-bg: #3A2F14;
+  --bad: #E8907E;
+  --bad-bg: #40211B;
+  --wait: #9DB0B7;
+  --wait-bg: #1C313A;
+  --focus: #9CC6D6;
+  color-scheme: dark;
+}
+
+* { box-sizing: border-box; }
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--ink);
+  font-family: var(--font-body);
+  font-size: 15px;
+  line-height: 1.5;
+}
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0 0 auto;
+  height: env(safe-area-inset-top, 0px);
+  background: var(--head-bg);
+  z-index: 30;
+}
+.wrap {
+  max-width: 1180px;
+  margin: 0 auto;
+  padding-left: max(16px, env(safe-area-inset-left, 0px));
+  padding-right: max(16px, env(safe-area-inset-right, 0px));
+}
+:focus-visible { outline: 2px solid var(--focus); outline-offset: 2px; }
+h1, h2, h3 { text-wrap: balance; }
+h2, h3 { margin: 0; font-family: var(--font-display); font-weight: 600; }
+h2 { font-size: 1.2rem; }
+h2:focus, h3:focus { outline: none; }
+
+/* Cabecalho */
+.hero { background: var(--head-bg); color: var(--head-ink); }
+.hero .wrap { padding-block: 26px 18px; display: flex; flex-wrap: wrap; align-items: end; justify-content: space-between; gap: 14px 24px; }
+.eyebrow { margin: 0 0 10px; font-size: 0.72rem; letter-spacing: 0.14em; text-transform: uppercase; color: var(--brass-soft); font-weight: 500; }
+h1 { margin: 0; font-family: var(--font-display); font-weight: 600; font-size: clamp(1.7rem, 6vw, 2.3rem); line-height: 1.15; }
+.start { display: flex; flex-direction: column; gap: 4px; font-size: 0.8rem; color: var(--head-muted); }
+.start input {
+  font: inherit; font-size: 0.9rem;
+  background: transparent; color: var(--head-ink);
+  border: 1px solid var(--head-muted); border-radius: 6px; padding: 6px 8px;
+  color-scheme: dark;
+}
+
+.bar { position: sticky; top: env(safe-area-inset-top, 0px); z-index: 20; background: var(--head-bg); color: var(--head-ink); border-bottom: 1px solid var(--brass); }
+.bar .wrap { padding-block: 10px 12px; }
+.bar-row { display: flex; justify-content: space-between; align-items: baseline; gap: 12px; font-variant-numeric: tabular-nums; }
+.bar-row strong { font-family: var(--font-display); font-size: 1.35rem; font-weight: 600; }
+.bar-row span { color: var(--head-muted); font-size: 0.85rem; text-align: right; }
+.track { position: relative; height: 6px; background: var(--track); border-radius: 3px; margin-top: 6px; }
+.fill { height: 100%; width: 0; background: var(--progress); border-radius: 3px; transition: width 0.35s ease; }
+.mark { position: absolute; top: -4px; width: 2px; height: 14px; background: var(--brass-soft); left: 0; }
+
+main.wrap { padding-block: 22px 56px; display: flex; flex-direction: column; gap: 20px; }
+.row { display: grid; gap: 20px; grid-template-columns: minmax(0, 1fr); }
+@media (min-width: 820px) {
+  .row.two { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); }
+  .row.top { grid-template-columns: minmax(0, 5fr) minmax(0, 6fr); }
+}
+.card { background: var(--surface); border: 1px solid var(--line); border-radius: 8px; padding: 16px; min-width: 0; }
+.card > p.sub { margin: 4px 0 12px; color: var(--muted); font-size: 0.88rem; }
+.card > h2 + .legend { margin-top: 8px; }
+
+/* Visao geral */
+.overview { display: grid; grid-template-columns: 140px minmax(0, 1fr); gap: 16px; align-items: center; margin-top: 8px; }
+.donut { width: 140px; height: 140px; }
+.donut .d-track { stroke: var(--track-light); }
+.donut .d-fill { stroke: var(--progress-light); }
+.donut .d-num { fill: var(--ink); font-family: var(--font-display); font-size: 28px; font-weight: 600; }
+.donut .d-sub { fill: var(--muted); font-size: 10px; font-family: var(--font-body); }
+.nums { list-style: none; margin: 0; padding: 0; display: grid; gap: 6px; font-variant-numeric: tabular-nums; }
+.nums li { display: flex; justify-content: space-between; gap: 10px; border-bottom: 1px solid var(--line); padding-bottom: 6px; }
+.nums li:last-child { border-bottom: 0; padding-bottom: 0; }
+.nums b { font-weight: 700; }
+.nums .bad b { color: var(--bad); }
+.guide { margin: 14px 0 0; padding: 10px 12px; background: var(--sand); border-radius: 6px; font-size: 0.9rem; }
+@media (max-width: 420px) { .overview { grid-template-columns: 1fr; justify-items: center; } .nums { width: 100%; } }
+
+/* Foco */
+.focus ul { list-style: none; margin: 0; padding: 0; }
+.focus li + li { border-top: 1px solid var(--line); }
+.all-done { margin: 10px 0; color: var(--muted); }
+
+/* Tarefas (foco e colunas) */
+.task label { display: grid; grid-template-columns: 22px minmax(0, 1fr); gap: 12px; align-items: start; padding: 10px 0; cursor: pointer; }
+.task .t-title { overflow-wrap: anywhere; display: block; }
+.task .hint { display: block; color: var(--muted); font-size: 0.82rem; margin-top: 2px; }
+.tags { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 5px; }
+.tag { font-size: 0.7rem; letter-spacing: 0.02em; border-radius: 4px; padding: 1px 7px; border: 1px solid var(--line); color: var(--muted); font-variant-numeric: tabular-nums; white-space: nowrap; }
+.tag.bad { color: var(--bad); background: var(--bad-bg); border-color: transparent; font-weight: 500; }
+.tag.warn { color: var(--warn); background: var(--warn-bg); border-color: transparent; font-weight: 500; }
+.tag.mod { color: var(--brass); border-color: var(--line); text-transform: uppercase; letter-spacing: 0.08em; font-size: 0.66rem; }
+.task.done .t-title { color: var(--muted); text-decoration: line-through; text-decoration-color: var(--line-strong); }
+input.chk {
+  appearance: none; -webkit-appearance: none;
+  width: 22px; height: 22px; margin: 1px 0 0;
+  border: 1.5px solid var(--line-strong); border-radius: 5px; background: var(--surface);
+  display: grid; place-items: center; cursor: pointer;
+}
+input.chk:checked { background: var(--accent); border-color: var(--accent); }
+input.chk:checked::after { content: ""; width: 6px; height: 11px; border: solid var(--accent-ink); border-width: 0 2px 2px 0; transform: rotate(45deg); margin-top: -2px; }
+
+/* Graficos */
+.legend { display: flex; flex-wrap: wrap; gap: 4px 14px; font-size: 0.8rem; color: var(--muted); }
+.legend i { display: inline-block; width: 10px; height: 10px; border-radius: 2px; margin-right: 6px; vertical-align: -1px; }
+.sw-done { background: var(--progress-light); }
+.sw-open { background: var(--track-light); box-shadow: inset 0 0 0 1px var(--line-strong); }
+.sw-late { background: var(--bad); }
+.areas { display: grid; gap: 12px; margin-top: 12px; }
+.area-row .top { display: flex; justify-content: space-between; gap: 10px; font-size: 0.88rem; font-variant-numeric: tabular-nums; }
+.area-row .top span:last-child { color: var(--muted); white-space: nowrap; }
+.stack { display: flex; height: 10px; margin-top: 4px; background: var(--track-light); border-radius: 3px; overflow: hidden; box-shadow: inset 0 0 0 1px var(--line); }
+.stack > i { display: block; background: var(--progress-light); transition: width 0.35s ease; }
+.weeks { width: 100%; height: auto; display: block; margin-top: 10px; }
+.weeks text { fill: var(--muted); font-family: var(--font-body); font-size: 9px; }
+.weeks text.cur { fill: var(--ink); font-weight: 700; }
+.weeks .w-open { fill: var(--track-light); stroke: var(--line-strong); stroke-width: 0.8; }
+.weeks .w-late { stroke: var(--bad); stroke-width: 1.4; }
+.weeks .w-done { fill: var(--progress-light); }
+.weeks .grid { stroke: var(--line); stroke-width: 0.6; }
+.weeks .cur-line { stroke: var(--brass); stroke-width: 1; stroke-dasharray: 2 2; }
+
+/* Quadro por area */
+.board-head { display: flex; justify-content: space-between; align-items: baseline; gap: 12px; flex-wrap: wrap; }
+.board-head p { margin: 0; color: var(--muted); font-size: 0.85rem; }
+.board { display: flex; gap: 12px; overflow-x: auto; padding: 12px 2px 14px; scroll-snap-type: x proximity; align-items: flex-start; }
+.col { flex: 0 0 min(310px, 84vw); scroll-snap-align: start; background: var(--surface); border: 1px solid var(--line); border-radius: 8px; padding: 14px; }
+.col-head { display: flex; flex-direction: column; gap: 6px; padding-bottom: 10px; border-bottom: 1px solid var(--line); }
+.col-title { display: flex; justify-content: space-between; align-items: start; gap: 10px; }
+.col-title h3 { font-size: 1.05rem; line-height: 1.25; }
+.col-meta { display: flex; justify-content: space-between; gap: 10px; color: var(--muted); font-size: 0.8rem; font-variant-numeric: tabular-nums; }
+.pill { font-size: 0.7rem; font-weight: 500; border-radius: 4px; padding: 2px 8px; white-space: nowrap; }
+.pill.good { color: var(--good); background: var(--good-bg); }
+.pill.warn { color: var(--warn); background: var(--warn-bg); }
+.pill.bad { color: var(--bad); background: var(--bad-bg); }
+.pill.wait { color: var(--wait); background: var(--wait-bg); }
+.col ul { list-style: none; margin: 0; padding: 0; }
+.col .task + .task { border-top: 1px solid var(--line); }
+.col details { margin-top: 8px; border-top: 1px solid var(--line); }
+.col details > summary { cursor: pointer; padding: 10px 0 4px; color: var(--muted); font-size: 0.82rem; }
+.empty-col { margin: 10px 0 0; color: var(--muted); font-size: 0.88rem; }
+
+@media (prefers-reduced-motion: reduce) { .fill, .stack > i { transition: none; } }
+</style>
+
+<header class="hero">
+  <div class="wrap">
+    <div>
+      <p class="eyebrow">Fernando Pagani | Organização Financeira</p>
+      <h1>Painel de abertura</h1>
+    </div>
+    <label class="start" for="inicio">Início do plano
+      <input type="date" id="inicio">
+    </label>
+  </div>
+</header>
+
+<div class="bar" role="status" aria-live="polite">
+  <div class="wrap">
+    <div class="bar-row"><strong id="pct">0%</strong><span id="count">0 de 0 etapas</span></div>
+    <div class="track"><div class="fill" id="fill"></div><div class="mark" id="mark" title="Meta até o fim da semana"></div></div>
+  </div>
+</div>
+
+<main class="wrap" id="main">
+  <div class="row top">
+    <section class="card" aria-labelledby="ov-h">
+      <h2 id="ov-h">Visão geral</h2>
+      <div class="overview">
+        <svg class="donut" id="donut" viewBox="0 0 140 140" role="img" aria-label="Progresso geral"></svg>
+        <ul class="nums" id="nums"></ul>
+      </div>
+      <p class="guide" id="guide"></p>
+    </section>
+
+    <section class="card focus" aria-labelledby="focus-h">
+      <h2 id="focus-h" tabindex="-1">Foco agora</h2>
+      <p class="sub">As três etapas mais urgentes, na ordem. A lista se refaz sempre que você marca algo.</p>
+      <ul id="focus-list"></ul>
+    </section>
+  </div>
+
+  <div class="row two">
+    <section class="card" aria-labelledby="ar-h">
+      <h2 id="ar-h">Concluído e em aberto por área</h2>
+      <div class="legend"><span><i class="sw-done"></i>Concluídas</span><span><i class="sw-open"></i>Em aberto</span></div>
+      <div class="areas" id="areas"></div>
+    </section>
+
+    <section class="card" aria-labelledby="wk-h">
+      <h2 id="wk-h">Etapas por semana de prazo</h2>
+      <div class="legend"><span><i class="sw-done"></i>Concluídas</span><span><i class="sw-open"></i>Em aberto</span><span><i class="sw-late"></i>Atrasadas</span></div>
+      <svg class="weeks" id="weeks" viewBox="0 0 360 150" role="img" aria-label="Etapas por semana"></svg>
+    </section>
+  </div>
+
+  <section aria-labelledby="bd-h">
+    <div class="board-head">
+      <h2 id="bd-h">Áreas</h2>
+      <p id="save-status" aria-live="polite"></p>
+    </div>
+    <div class="board" id="board"></div>
+  </section>
+</main>
+
+<script>
+(function () {
+  // [titulo, semana inicial, semana final, dica, caminho critico (1)]
+  var MODS = [
+    { id: "marca", nome: "Marca", tasks: [
+      ["Pesquisar o nome “Fernando Pagani Organização Financeira” no INPI", 1, 1],
+      ["Conferir e registrar o domínio fernandopagani.com.br", 1, 1, "Se estiver livre, registre também fernandopaganifinancas.com.br para redirecionar.", 1],
+      ["Reservar o @ do Instagram profissional", 1, 1],
+      ["Desenhar o logo: nome em serifada sóbria e monograma FP", 1, 3],
+      ["Exportar o logo nas versões horizontal, vertical, positiva e negativa", 3, 3],
+      ["Escolher a foto profissional de perfil", 2, 3],
+      ["Criar o e-mail contato@fernandopagani.com.br e a assinatura", 2, 3],
+      ["Aplicar paleta e tipografia do kit em um modelo de apresentação", 3, 3],
+      ["Decidir se o nome será registrado no INPI", 2, 3, "Avaliar com contador ou advogado."]
+    ]},
+    { id: "juridico", nome: "Jurídico e fiscal", tasks: [
+      ["Marcar conversa com um contador para definir o enquadramento", 1, 1, "Confirmar se a atividade cabe no MEI ou se exige outro porte e o Simples Nacional.", 1],
+      ["Definir os limites de atuação com a CVM em mente", 1, 2, "Não recomendar produtos de investimento específicos e não usar título certificado sem a certificação.", 1],
+      ["Definir o CNAE da atividade com o contador", 1, 2],
+      ["Abrir o CNPJ", 2, 3, "", 1],
+      ["Registrar inscrição municipal e alvará em Indaial", 3, 4],
+      ["Abrir conta PJ e separar do pessoal", 3, 4, "", 1],
+      ["Definir a emissão de nota fiscal de serviço", 3, 4],
+      ["Redigir o contrato de prestação de serviços", 3, 4, "", 1],
+      ["Redigir termo de confidencialidade e política de privacidade (LGPD)", 3, 5],
+      ["Definir onde guardar documentos e dados dos clientes com segurança", 3, 4]
+    ]},
+    { id: "financas", nome: "Finanças do negócio e da casa", tasks: [
+      ["Calcular o custo mensal da família e por quantos meses a reserva cobre", 1, 1, "", 1],
+      ["Alinhar o plano e os prazos com a família", 1, 1],
+      ["Definir a meta mínima de faturamento mensal", 1, 2, "", 1],
+      ["Listar os custos fixos do negócio: domínio, site, ferramentas, contador", 2, 2],
+      ["Calcular o ponto de equilíbrio em número de clientes", 2, 2],
+      ["Definir pró-labore e reserva para impostos", 2, 3],
+      ["Marcar uma data e um critério de revisão para avaliar se o negócio paga as contas", 2, 2]
+    ]},
+    { id: "oferta", nome: "Oferta e preços", tasks: [
+      ["Definir o serviço principal: diagnóstico, plano e acompanhamento", 2, 2, "", 1],
+      ["Descrever as etapas e as entregas de cada fase", 2, 3],
+      ["Definir a conversa inicial de diagnóstico: duração e formato", 3, 3],
+      ["Escrever o que o serviço não faz, com escopo e limites", 3, 3],
+      ["Definir duração e número de encontros do acompanhamento", 3, 3],
+      ["Definir faixa de preço e pacotes", 3, 3, "", 1],
+      ["Definir preço de lançamento para os 3 primeiros clientes", 3, 4, "", 1],
+      ["Definir formas de pagamento: Pix, cartão e parcelamento", 3, 4],
+      ["Criar o formulário de triagem do cliente", 3, 4],
+      ["Definir política de remarcação e cancelamento", 4, 4]
+    ]},
+    { id: "metodo", nome: "Método e materiais", tasks: [
+      ["Concluir o curso sobre atendimento a endividados", 1, 6],
+      ["Montar o roteiro do diagnóstico financeiro", 2, 3, "", 1],
+      ["Criar a planilha de orçamento e o mapa de dívidas do cliente", 3, 4, "", 1],
+      ["Criar o modelo de plano de ação com prioridades", 4, 4],
+      ["Estruturar o método de negociação de dívidas, com ordem de prioridade", 4, 5],
+      ["Criar o modelo de relatório de cada etapa", 5, 5],
+      ["Definir como acompanhar o cliente entre os encontros", 5, 6],
+      ["Fazer 2 atendimentos-teste com pessoas conhecidas", 5, 6, "", 1],
+      ["Ajustar os materiais com base nos testes", 6, 6]
+    ]},
+    { id: "atendimento", nome: "Atendimento e ferramentas", tasks: [
+      ["Escolher a ferramenta de videochamada", 3, 3],
+      ["Escolher a ferramenta de agenda online", 3, 4],
+      ["Criar a planilha simples de controle de clientes", 3, 4],
+      ["Configurar o WhatsApp Business com mensagens de boas-vindas", 4, 4],
+      ["Definir a forma de cobrança e de recibo", 4, 5, "", 1],
+      ["Escrever a mensagem de boas-vindas e o roteiro do primeiro encontro", 4, 5],
+      ["Criar a pesquisa de satisfação para o fim do atendimento", 6, 6]
+    ]},
+    { id: "instagram", nome: "Instagram e redes", tasks: [
+      ["Criar a conta profissional no Instagram", 3, 3, "", 1],
+      ["Escrever a bio e colocar o link de agendamento", 3, 3],
+      ["Criar capas de destaques e modelos de post com a identidade", 3, 4],
+      ["Definir 3 a 4 pilares de conteúdo", 3, 4],
+      ["Criar o perfil no LinkedIn alinhado à nova atuação", 3, 5],
+      ["Publicar os primeiros 6 a 9 posts", 4, 6],
+      ["Divulgar o novo perfil uma vez na rede pessoal", 6, 6]
+    ]},
+    { id: "site", nome: "Site", tasks: [
+      ["Definir a estrutura de uma página: promessa, para quem, como funciona, sobre você, perguntas e contato", 4, 4],
+      ["Escolher a ferramenta para criar o site e a hospedagem", 4, 4],
+      ["Escrever os textos com tom acolhedor", 4, 5],
+      ["Montar o site com a identidade visual", 5, 7],
+      ["Conectar o domínio e o e-mail profissional", 6, 6],
+      ["Inserir o agendamento da conversa inicial", 6, 7, "", 1],
+      ["Publicar política de privacidade e termos", 6, 7],
+      ["Testar o site no celular", 7, 7],
+      ["Criar o perfil da empresa no Google", 7, 8],
+      ["Instalar a medição básica de visitas", 7, 8],
+      ["Publicar o site", 7, 8, "", 1]
+    ]},
+    { id: "conteudo", nome: "Conteúdo", tasks: [
+      ["Listar 30 dúvidas e dores do cliente ideal", 4, 5],
+      ["Montar o calendário de conteúdo de 4 semanas", 5, 5],
+      ["Definir a rotina semanal de conteúdo, com horário fixo", 5, 5],
+      ["Criar um material gratuito, como a planilha de orçamento, para captar contatos", 5, 7],
+      ["Publicar 3 posts por semana durante 4 semanas", 6, 9],
+      ["Escrever 1 conteúdo mais aprofundado por quinzena", 7, 12],
+      ["Revisar o que gerou conversas e ajustar os pilares", 9, 10]
+    ]},
+    { id: "prospeccao", nome: "Prospecção e vendas", tasks: [
+      ["Listar 30 pessoas da rede que podem indicar ou precisar do serviço", 4, 4, "", 1],
+      ["Escrever o convite para a conversa de diagnóstico, sem pressão", 4, 5],
+      ["Mapear parceiros: contadores, advogados, RH de empresas e corretores", 5, 5],
+      ["Definir a rotina semanal de retorno aos contatos", 6, 6],
+      ["Fazer 10 contatos com parceiros", 6, 8],
+      ["Fechar os 3 primeiros clientes-piloto com preço de lançamento", 6, 9, "", 1],
+      ["Registrar cada contato e retorno no controle de clientes", 6, 12],
+      ["Pedir depoimentos, com autorização por escrito", 9, 12]
+    ]},
+    { id: "lancamento", nome: "Lançamento e revisão", tasks: [
+      ["Fazer o checklist final: site, contrato, cobrança e agenda", 8, 8, "", 1],
+      ["Anunciar o lançamento nas redes", 8, 9],
+      ["Realizar os primeiros atendimentos pagos", 8, 10, "", 1],
+      ["Fazer a revisão de 30 dias: o que funcionou e o que não", 10, 11],
+      ["Ajustar oferta e preço", 11, 11],
+      ["Definir as metas dos próximos 90 dias", 12, 12]
+    ]}
+  ];
+
+  var KEY = "painel-abertura-v2";
+  var OLD_KEY = "painel-abertura-v1";
+  var DEFAULT_START = "2026-10-24";
+  var PLAN_WEEKS = 12;
+  var NS = "http://www.w3.org/2000/svg";
+
+  var done = {};
+  var feitoEm = {};
+  var inicio = "";
+  var flat = [];
+  var openDone = {};
+  var pendingFocus = null;
+
+  MODS.forEach(function (m, mi) {
+    m.tasks.forEach(function (t, ti) {
+      flat.push({ id: m.id + "-" + (ti + 1), mod: m, title: t[0], w1: t[1], w2: t[2], hint: t[3] || "", crit: t[4] === 1, order: mi * 100 + ti });
+    });
+  });
+
+  function $(id) { return document.getElementById(id); }
+  function mk(tag, cls, text) {
+    var n = document.createElement(tag);
+    if (cls) n.className = cls;
+    if (text != null) n.textContent = text;
+    return n;
+  }
+  function sv(tag, attrs, text) {
+    var n = document.createElementNS(NS, tag);
+    for (var k in attrs) n.setAttribute(k, attrs[k]);
+    if (text != null) n.textContent = text;
+    return n;
+  }
+  function weekLabel(a, b) { return a === b ? "Sem. " + a : "Sem. " + a + " a " + b; }
+  function plural(n, one, many) { return n + " " + (n === 1 ? one : many); }
+
+  /* Datas e prioridade */
+  function startDate() {
+    var d = new Date((inicio || DEFAULT_START) + "T00:00:00");
+    return isNaN(d.getTime()) ? new Date(DEFAULT_START + "T00:00:00") : d;
+  }
+  function currentWeek() {
+    var now = new Date();
+    var t0 = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+    var diff = Math.floor((t0 - startDate()) / 86400000);
+    return diff < 0 ? 1 : Math.floor(diff / 7) + 1;
+  }
+  function info(t, cw) {
+    var st = t.w2 < cw ? "late" : (t.w1 <= cw ? "due" : "next");
+    var score, reason;
+    if (st === "late") {
+      var n = cw - t.w2;
+      score = 1000 + n * 50 + (t.crit ? 30 : 0);
+      reason = "Atrasada há " + plural(n, "semana", "semanas");
+    } else if (st === "due") {
+      score = 500 + (t.crit ? 30 : 0) + (10 - Math.min(10, t.w2 - cw));
+      reason = t.crit ? "Caminho crítico desta semana" : "Prevista para esta semana";
+    } else {
+      score = 100 - (t.w1 - cw) * 5 + (t.crit ? 10 : 0);
+      reason = t.crit ? "Adiantar: caminho crítico" : "Próxima etapa";
+    }
+    return { st: st, score: score, reason: reason };
+  }
+
+  /* Persistencia local */
+  function clean(obj) {
+    var out = {};
+    if (!obj || typeof obj !== "object") return out;
+    flat.forEach(function (t) { if (obj[t.id] === true) out[t.id] = true; });
+    return out;
+  }
+  function cleanDates(obj) {
+    var out = {};
+    if (!obj || typeof obj !== "object") return out;
+    flat.forEach(function (t) { if (done[t.id] === true && typeof obj[t.id] === "string") out[t.id] = obj[t.id]; });
+    return out;
+  }
+  function validDate(s) { return typeof s === "string" && /^\d{4}-\d{2}-\d{2}$/.test(s); }
+  function loadLocal() {
+    try {
+      var raw = localStorage.getItem(KEY);
+      if (raw) {
+        var o = JSON.parse(raw);
+        done = clean(o.done);
+        feitoEm = cleanDates(o.feitoEm);
+        inicio = validDate(o.inicio) ? o.inicio : "";
+        return;
+      }
+      var old = localStorage.getItem(OLD_KEY);
+      if (old) done = clean(JSON.parse(old));
+    } catch (e) {}
+  }
+  function saveLocal() {
+    try { localStorage.setItem(KEY, JSON.stringify({ done: done, feitoEm: feitoEm, inicio: inicio })); } catch (e) {}
+  }
+
+  /* Renderizacao */
+  function taskRow(t, cw, opts) {
+    var on = done[t.id] === true;
+    var inf = info(t, cw);
+    var li = mk("li", "task" + (on ? " done" : ""));
+    var label = mk("label");
+    var input = mk("input", "chk");
+    input.type = "checkbox";
+    input.checked = on;
+    input.setAttribute("aria-label", (on ? "Reabrir: " : "Concluir: ") + t.title);
+    input.addEventListener("change", function () { toggle(t.id, input.checked, opts.focusTo); });
+    var box = mk("span");
+    box.appendChild(mk("span", "t-title", t.title));
+    if (t.hint && !opts.compact) box.appendChild(mk("small", "hint", t.hint));
+    var tags = mk("span", "tags");
+    if (opts.showMod) tags.appendChild(mk("span", "tag mod", t.mod.nome));
+    if (!on && opts.reason) tags.appendChild(mk("span", "tag " + (inf.st === "late" ? "bad" : (t.crit ? "warn" : "")), inf.reason));
+    else if (!on && inf.st === "late") tags.appendChild(mk("span", "tag bad", "Atrasada"));
+    if (!on && !opts.reason && t.crit) tags.appendChild(mk("span", "tag warn", "Crítica"));
+    tags.appendChild(mk("span", "tag", weekLabel(t.w1, t.w2)));
+    box.appendChild(tags);
+    label.appendChild(input);
+    label.appendChild(box);
+    li.appendChild(label);
+    return li;
+  }
+
+  function stats(cw) {
+    var s = { total: flat.length, n: 0, late: 0, crit: 0, due: 0, expected: 0 };
+    flat.forEach(function (t) {
+      var on = done[t.id] === true;
+      if (on) s.n++;
+      if (t.w2 <= cw) s.expected++;
+      if (!on) {
+        var st = info(t, cw).st;
+        if (st === "late") s.late++;
+        if (st === "due") s.due++;
+        if (t.crit) s.crit++;
+      }
+    });
+    s.pct = Math.round(s.n / s.total * 100);
+    s.expPct = Math.min(100, Math.round(s.expected / s.total * 100));
+    return s;
+  }
+
+  function renderTop(s, cw) {
+    $("pct").textContent = s.pct + "%";
+    var wk = cw <= PLAN_WEEKS ? "Semana " + cw + " de " + PLAN_WEEKS : "Semana " + cw + ", após as " + PLAN_WEEKS + " previstas";
+    $("count").textContent = s.n + " de " + s.total + " etapas · " + wk;
+    $("fill").style.width = s.pct + "%";
+    $("mark").style.left = "calc(" + s.expPct + "% - 1px)";
+    $("mark").title = "Meta até o fim da semana " + cw + ": " + s.expPct + "%";
+
+    var d = $("donut");
+    d.textContent = "";
+    var C = 2 * Math.PI * 52;
+    d.appendChild(sv("circle", { "class": "d-track", cx: 70, cy: 70, r: 52, fill: "none", "stroke-width": 14 }));
+    d.appendChild(sv("circle", { "class": "d-fill", cx: 70, cy: 70, r: 52, fill: "none", "stroke-width": 14, "stroke-dasharray": (C * s.n / s.total) + " " + C, transform: "rotate(-90 70 70)" }));
+    d.appendChild(sv("text", { "class": "d-num", x: 70, y: 74, "text-anchor": "middle" }, s.pct + "%"));
+    d.appendChild(sv("text", { "class": "d-sub", x: 70, y: 90, "text-anchor": "middle" }, "concluído"));
+    d.setAttribute("aria-label", s.pct + "% concluído: " + s.n + " de " + s.total + " etapas");
+
+    var nums = $("nums");
+    nums.textContent = "";
+    [
+      ["Concluídas", s.n, ""],
+      ["Em aberto", s.total - s.n, ""],
+      ["Atrasadas", s.late, s.late > 0 ? "bad" : ""],
+      ["Críticas pendentes", s.crit, ""]
+    ].forEach(function (r) {
+      var li = mk("li", r[2]);
+      li.appendChild(mk("span", null, r[0]));
+      li.appendChild(mk("b", null, String(r[1])));
+      nums.appendChild(li);
+    });
+
+    var g;
+    if (s.n === s.total) {
+      g = "Plano concluído. Agora o trabalho é manter a rotina de conteúdo e de retorno aos contatos.";
+    } else {
+      g = wk + ". ";
+      g += s.late > 0
+        ? "Há " + plural(s.late, "etapa atrasada", "etapas atrasadas") + ": comece por elas. "
+        : "Nada atrasado. Siga o foco ao lado. ";
+      g += "Meta até o fim desta semana: " + s.expPct + "%. Realizado: " + s.pct + "%.";
+    }
+    $("guide").textContent = g;
+  }
+
+  function renderFocus(cw) {
+    var ul = $("focus-list");
+    ul.textContent = "";
+    var pending = flat.filter(function (t) { return done[t.id] !== true; })
+      .map(function (t) { return { t: t, i: info(t, cw) }; })
+      .sort(function (a, b) { return b.i.score - a.i.score || a.t.order - b.t.order; })
+      .slice(0, 3);
+    if (!pending.length) {
+      ul.appendChild(mk("li", "all-done", "Todas as etapas estão concluídas."));
+      return;
+    }
+    pending.forEach(function (p) {
+      ul.appendChild(taskRow(p.t, cw, { showMod: true, reason: true, focusTo: "focus-h", compact: false }));
+    });
+  }
+
+  function renderAreas() {
+    var box = $("areas");
+    box.textContent = "";
+    MODS.forEach(function (m) {
+      var list = flat.filter(function (t) { return t.mod === m; });
+      var c = list.filter(function (t) { return done[t.id] === true; }).length;
+      var pct = Math.round(c / list.length * 100);
+      var row = mk("div", "area-row");
+      var top = mk("div", "top");
+      top.appendChild(mk("span", null, m.nome));
+      top.appendChild(mk("span", null, c + " de " + list.length + " · " + pct + "%"));
+      var st = mk("div", "stack");
+      st.setAttribute("role", "img");
+      st.setAttribute("aria-label", m.nome + ": " + c + " concluídas, " + (list.length - c) + " em aberto");
+      var i = mk("i");
+      i.style.width = pct + "%";
+      st.appendChild(i);
+      row.appendChild(top);
+      row.appendChild(st);
+      box.appendChild(row);
+    });
+  }
+
+  function renderWeeks(cw) {
+    var s = $("weeks");
+    s.textContent = "";
+    var W = PLAN_WEEKS;
+    var data = [];
+    var max = 1;
+    for (var w = 1; w <= W; w++) {
+      var list = flat.filter(function (t) { return t.w2 === w; });
+      var d = list.filter(function (t) { return done[t.id] === true; }).length;
+      data.push({ w: w, total: list.length, done: d, open: list.length - d });
+      if (list.length > max) max = list.length;
+    }
+    var left = 26, right = 6, top = 10, bottom = 22;
+    var cw2 = 360, ch = 150;
+    var plotW = cw2 - left - right, plotH = ch - top - bottom;
+    var slot = plotW / W, bw = slot * 0.62;
+    function y(v) { return top + plotH - (v / max) * plotH; }
+
+    [0, max].forEach(function (v) {
+      s.appendChild(sv("line", { "class": "grid", x1: left, x2: cw2 - right, y1: y(v), y2: y(v) }));
+      s.appendChild(sv("text", { x: left - 5, y: y(v) + 3, "text-anchor": "end" }, String(v)));
+    });
+    if (cw >= 1 && cw <= W) {
+      var cx = left + slot * (cw - 0.5);
+      s.appendChild(sv("line", { "class": "cur-line", x1: cx, x2: cx, y1: top - 4, y2: top + plotH }));
+    }
+    var summary = [];
+    data.forEach(function (d) {
+      var x = left + slot * (d.w - 1) + (slot - bw) / 2;
+      var isLate = d.w < cw && d.open > 0;
+      var g = sv("g", {});
+      g.appendChild(sv("title", {}, "Semana " + d.w + ": " + d.done + " concluídas, " + d.open + " em aberto" + (isLate ? " (atrasadas)" : "")));
+      if (d.open > 0) {
+        g.appendChild(sv("rect", { "class": "w-open" + (isLate ? " w-late" : ""), x: x, y: y(d.total), width: bw, height: Math.max(0, y(d.done) - y(d.total)), rx: 1.5 }));
+      }
+      if (d.done > 0) {
+        g.appendChild(sv("rect", { "class": "w-done", x: x, y: y(d.done), width: bw, height: y(0) - y(d.done), rx: 1.5 }));
+      }
+      s.appendChild(g);
+      s.appendChild(sv("text", { "class": d.w === cw ? "cur" : "", x: x + bw / 2, y: ch - 7, "text-anchor": "middle" }, String(d.w)));
+      summary.push("S" + d.w + ": " + d.done + "/" + d.total);
+    });
+    s.appendChild(sv("text", { x: left + plotW / 2, y: ch - 0, "text-anchor": "middle" }, ""));
+    s.setAttribute("aria-label", "Etapas por semana de prazo. " + summary.join("; "));
+  }
+
+  function colStatus(list, cw) {
+    var pend = list.filter(function (t) { return done[t.id] !== true; });
+    if (!pend.length) return { t: "Concluída", k: "good" };
+    var sts = pend.map(function (t) { return info(t, cw).st; });
+    if (sts.indexOf("late") >= 0) return { t: "Atrasada", k: "bad" };
+    if (sts.indexOf("due") >= 0) return { t: "Nesta semana", k: "warn" };
+    return { t: "Aguardando", k: "wait" };
+  }
+
+  function renderBoard(cw) {
+    var board = $("board");
+    var scroll = board.scrollLeft;
+    board.textContent = "";
+    MODS.forEach(function (m) {
+      var list = flat.filter(function (t) { return t.mod === m; });
+      var doneList = list.filter(function (t) { return done[t.id] === true; });
+      var pend = list.filter(function (t) { return done[t.id] !== true; })
+        .map(function (t) { return { t: t, i: info(t, cw) }; })
+        .sort(function (a, b) { return b.i.score - a.i.score || a.t.order - b.t.order; });
+      var w1 = Math.min.apply(null, list.map(function (t) { return t.w1; }));
+      var w2 = Math.max.apply(null, list.map(function (t) { return t.w2; }));
+      var stt = colStatus(list, cw);
+
+      var col = mk("section", "col");
+      col.setAttribute("aria-labelledby", "h-" + m.id);
+      var head = mk("div", "col-head");
+      var tt = mk("div", "col-title");
+      var h = mk("h3", null, m.nome);
+      h.id = "h-" + m.id;
+      h.tabIndex = -1;
+      tt.appendChild(h);
+      tt.appendChild(mk("span", "pill " + stt.k, stt.t));
+      head.appendChild(tt);
+      var meta = mk("div", "col-meta");
+      meta.appendChild(mk("span", null, doneList.length + " de " + list.length + " concluídas"));
+      meta.appendChild(mk("span", null, weekLabel(w1, w2)));
+      head.appendChild(meta);
+      var stack = mk("div", "stack");
+      var bar = mk("i");
+      bar.style.width = (doneList.length / list.length * 100) + "%";
+      stack.appendChild(bar);
+      head.appendChild(stack);
+      col.appendChild(head);
+
+      var ul = mk("ul");
+      if (!pend.length) {
+        col.appendChild(mk("p", "empty-col", "Nenhuma etapa em aberto nesta área."));
+      } else {
+        pend.forEach(function (p) {
+          ul.appendChild(taskRow(p.t, cw, { reason: false, focusTo: "h-" + m.id, compact: false }));
+        });
+        col.appendChild(ul);
+      }
+      if (doneList.length) {
+        var det = mk("details");
+        det.open = openDone[m.id] === true;
+        det.addEventListener("toggle", function () { openDone[m.id] = det.open; });
+        det.appendChild(mk("summary", null, "Concluídas (" + doneList.length + ")"));
+        var ul2 = mk("ul");
+        doneList.forEach(function (t) { ul2.appendChild(taskRow(t, cw, { reason: false, focusTo: "h-" + m.id, compact: true })); });
+        det.appendChild(ul2);
+        col.appendChild(det);
+      }
+      board.appendChild(col);
+    });
+    board.scrollLeft = scroll;
+  }
+
+  function render() {
+    var cw = currentWeek();
+    var s = stats(cw);
+    renderTop(s, cw);
+    renderFocus(cw);
+    renderAreas();
+    renderWeeks(cw);
+    renderBoard(cw);
+    $("inicio").value = inicio || DEFAULT_START;
+    if (pendingFocus) {
+      var f = $(pendingFocus);
+      pendingFocus = null;
+      if (f) f.focus({ preventScroll: true });
+    }
+  }
+
+  /* Acoes e gravacao */
+  var statusEl = $("save-status");
+  function setStatus(t) { statusEl.textContent = t; }
+  var ref = null, writing = false, again = false, timer = null;
+
+  function toggle(id, on, focusTo) {
+    if (on) { done[id] = true; feitoEm[id] = new Date().toISOString(); }
+    else { delete done[id]; delete feitoEm[id]; }
+    pendingFocus = focusTo || null;
+    render();
+    changed();
+  }
+
+  function changed() {
+    saveLocal();
+    if (ref) {
+      setStatus("Salvando...");
+      clearTimeout(timer);
+      timer = setTimeout(function () { timer = null; flush(); }, 350);
+    } else {
+      setStatus("Salvo neste aparelho");
+    }
+  }
+
+  function flush() {
+    if (!ref) return;
+    if (writing) { again = true; return; }
+    writing = true;
+    var payload = {
+      done: Object.assign({}, done),
+      feitoEm: Object.assign({}, feitoEm),
+      inicio: inicio || DEFAULT_START,
+      atualizado: new Date().toISOString()
+    };
+    ref.set(payload).then(function () {
+      setStatus("Salvo");
+    }).catch(function () {
+      setStatus("Não foi possível salvar na nuvem. Salvo neste aparelho.");
+    }).then(function () {
+      writing = false;
+      if (again) { again = false; flush(); }
+    });
+  }
+
+  $("inicio").addEventListener("change", function (e) {
+    var v = e.target.value;
+    if (!validDate(v)) return;
+    inicio = v;
+    render();
+    changed();
+  });
+
+  loadLocal();
+  render();
+
+  (function connect() {
+    try {
+      var c = window.claude;
+      if (!c || typeof c.use !== "function") return;
+      c.use("db").then(function (db) {
+        if (!db) return;
+        ref = db.doc("painel/estado");
+        ref.onSnapshot(function (snap) {
+          if (snap.metadata && snap.metadata.hasPendingWrites) return;
+          if (writing || timer) return;
+          if (snap.exists) {
+            var data = snap.data() || {};
+            done = clean(data.done);
+            feitoEm = cleanDates(data.feitoEm);
+            inicio = validDate(data.inicio) ? data.inicio : inicio;
+            saveLocal();
+            render();
+            setStatus("Salvo");
+          }
+        }, function () {
+          ref = null;
+          setStatus("Salvo neste aparelho");
+        });
+      }).catch(function () { ref = null; });
+    } catch (e) {}
+  })();
+})();
+</script>
+
+</body></html>
